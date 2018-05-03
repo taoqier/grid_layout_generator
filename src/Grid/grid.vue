@@ -1,6 +1,10 @@
 <template>
     <div class="grid" :style="{'grid-template-rows': rowspan, 'grid-template-columns': columnspan, 'grid-row-gap': `${rgap}px`, 'grid-column-gap': `${cgap}px`}">
-        <div v-for="n in nums" :key="n" @click="updatefn(n)" ref="cells">{{wcell}}</div>
+        <div v-for="n in nums" :key="n" v-drag=1 :style="{width:widths[n], height:heights[n]}">
+            <!-- <span>{{wcell}}</span>
+            <span>{{hcell}}</span> -->
+        </div>
+        <!-- <div v-for="n in nums" :key="n" @click="updatefn(n)" ref="cells" v-drag=1>{{wcell}}</div> -->
         <!-- <div :contenteditable="editable" v-for="n in nums" :key="n" @click="edit">{{wcell}}</div> -->
         <!-- <textarea v-for="n in nums" :key="n" v-model="wcell"></textarea> -->
     </div>
@@ -11,7 +15,9 @@ export default {
     name: 'grid',
     data () {
         return {
-            editable: false
+            editable: false,
+            widths: [],
+            heights: []
         }
     },
     props: {
@@ -47,38 +53,38 @@ export default {
                 return value >= 0
             }
         },
-        wcell: {
-            type: Number,
-            required: true,
-            validator: function (value) {
-                return value >= 0
-            }
-        },
-        hcell: {
-            type: Number,
-            required: true,
-            validator: function (value) {
-                return value >= 0
-            }
-        },
+        // wcell: {
+        //     type: Number,
+        //     required: true,
+        //     validator: function (value) {
+        //         return value >= 0
+        //     }
+        // },
+        // hcell: {
+        //     type: Number,
+        //     required: true,
+        //     validator: function (value) {
+        //         return value >= 0
+        //     }
+        // },
     },
     computed: {
         rowspan: function () {
             let len = this.rows
             return new Array(len).fill(1).map((cell) => {
-                // return '100px'
-                return this.hcell+'px'
+                return '100px'
+                // return this.hcell+'px'
             }).reduce((css, item)=>{
-                return css + ' '+ item
+                return css + ' ' + item
             })
         },
         columnspan: function () {
             let len = this.columns
             return new Array(len).fill(1).map((cell) => {
-                // return '100px'
-                return this.wcell+'px'
-            }).reduce((css, item)=>{
-                return css + ' '+ item
+                return '100px'
+                // return this.wcell+'px'
+            }).reduce((css, item) => {
+                return css + ' ' + item
             })
         },
     },
@@ -92,7 +98,7 @@ export default {
         // },
         updatefn (index) {
             console.log(index + 'resize')
-            let sy = 'cell'+index
+            let sy = 'cell' + index
             console.log(sy)
             console.log(this.$refs.cells[index-1].style.cssText)
         }
@@ -107,12 +113,23 @@ export default {
     height: 600px;
     margin: 10px;
     div{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        resize:horizontal;
+        display: grid;
+        /* justify-content: center;
+        align-items: center; */
+        /* resize:horizontal; */
         overflow:auto;
         background-color:purple;
+        grid-template-rows: 2fr 1fr;
+        span:first-child{
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+        }
+        :last-child{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
 }
 </style>
